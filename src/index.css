@@ -1,0 +1,81 @@
+:root {
+  /* --- Color tokens: "whiteboard lab" palette --- */
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --grid-line: rgba(43, 89, 255, 0.07);
+  --ink: #1b1f27;
+  --ink-soft: #5b6270;
+  --border: #dde1e8;
+
+  --marker-blue:  #2b59ff;
+  --marker-amber: #ffb020;
+  --marker-red:   #ff4136;
+  --marker-green: #00b894;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button { font-family: inherit; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--marker-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Card hover lift — applied to algorithm cards on Home */
+a[style*="card"] {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+a[style*="card"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+}
