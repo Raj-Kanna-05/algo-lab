@@ -48,6 +48,7 @@ export default function KnapsackPage() {
     setIsPlaying(false)
     setSteps(knapsack(items, capacity))
     setCurrentStep(0)
+    setIsPlaying(true) // Automatically start playback!
   }
 
   const step = steps[currentStep]
@@ -68,9 +69,7 @@ export default function KnapsackPage() {
 
       <p style={styles.description}>
         You have a bag with a weight limit of <strong>{capacity}</strong> and a set of items,
-        each with a weight and a value. Which items do you pack to <strong>maximise total value</strong>{' '}
-        without exceeding the limit? DP solves this by filling a table where each cell
-        answers "best value using the first <em>i</em> items with capacity <em>w</em>."
+        each with a weight and a value. Which items do you pack to <strong>maximise total value</strong>?
       </p>
 
       {/* ── Editable items table ── */}
@@ -184,10 +183,10 @@ const styles = {
   itemInput: { padding: '6px 10px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--input-bg)', color: 'var(--ink)', fontFamily: 'var(--font-body)', fontSize: 13 },
   numInputGroup: { display: 'flex', alignItems: 'center', gap: 4 },
   inputPrefix: { fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-soft)' },
-  removeBtn: { width: 28, height: 28, borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'var(--marker-red)', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  removeBtn: { width: 28, height: 28, borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'var(--marker-red)', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
   editorFooter: { display: 'flex', justifyContent: 'space-between', gap: 10 },
-  addBtn: { padding: '7px 14px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 12 },
-  runBtn: { padding: '7px 18px', borderRadius: 6, border: 'none', background: 'var(--marker-blue)', color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 13 },
+  addBtn: { padding: '7px 14px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 12, cursor: 'pointer' },
+  runBtn: { padding: '7px 18px', borderRadius: 6, border: 'none', background: 'var(--marker-blue)', color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 13, cursor: 'pointer' },
   errorText: { margin: '10px 0 0', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--marker-red)' },
   decisionBadge: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '7px 14px', width: 'fit-content' },
   decisionLabel: { fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-soft)' },

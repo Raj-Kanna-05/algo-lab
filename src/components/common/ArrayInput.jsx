@@ -1,10 +1,5 @@
 /**
  * ArrayInput — reusable comma-separated number input for sorting pages
- *
- * Props:
- *   label        — field label
- *   defaultValue — initial number array
- *   onRun(arr)   — called when user clicks Run with a valid array
  */
 import { useState } from 'react'
 
@@ -92,6 +87,7 @@ const styles = {
     fontWeight: 600,
     fontSize: 13,
     whiteSpace: 'nowrap',
+    cursor: 'pointer',
   },
   error: {
     margin: 0,

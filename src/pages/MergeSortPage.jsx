@@ -25,6 +25,7 @@ export default function MergeSortPage() {
     setArray(newArr)
     setSteps(mergeSort(newArr))
     setCurrentStep(0)
+    setIsPlaying(true) // Start animating automatically!
   }
 
   const step = steps[currentStep]
@@ -33,14 +34,17 @@ export default function MergeSortPage() {
     <div className="container" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <Link to="/" style={styles.backLink}>← All algorithms</Link>
 
-      <div style={styles.eyebrow}>SORTING</div>
-      <h1 style={styles.h1}>Merge Sort</h1>
+      <div style={styles.headerRow}>
+        <div>
+          <div style={styles.eyebrow}>SORTING</div>
+          <h1 style={styles.h1}>Merge Sort</h1>
+        </div>
+      </div>
 
       <p style={styles.description}>
         Merge sort uses divide-and-conquer: it splits the array in half
         recursively until each piece has one element, then merges those pieces
-        back together in sorted order. It always runs in O(n log n) time —
-        more predictable than quick sort or bubble sort.
+        back together in sorted order.
       </p>
 
       <ArrayInput label="Custom Array" defaultValue={array} onRun={handleCustomArray} />
@@ -82,6 +86,7 @@ function LegendItem({ color, label }) {
 
 const styles = {
   backLink: { fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--ink-soft)', display: 'inline-block', marginBottom: 24 },
+  headerRow: { marginBottom: 14 },
   eyebrow: { fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.1em', color: 'var(--marker-blue)', marginBottom: 6 },
   h1: { fontFamily: 'var(--font-display)', fontSize: 34, margin: '0 0 14px 0' },
   description: { fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.55, maxWidth: 640, marginBottom: 20 },

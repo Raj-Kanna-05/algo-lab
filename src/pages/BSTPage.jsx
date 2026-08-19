@@ -38,6 +38,7 @@ export default function BSTPage() {
     setSearchTarget(target)
     setSteps(bstDemo(nums, target))
     setCurrentStep(0)
+    setIsPlaying(true) // Automatically start playback!
   }
 
   const step = steps[currentStep]
@@ -52,7 +53,6 @@ export default function BSTPage() {
       <p style={styles.description}>
         A Binary Search Tree keeps values in order: everything in the <strong>left subtree</strong>{' '}
         is smaller than the node, everything in the <strong>right subtree</strong> is larger.
-        This makes searching very fast — at each node we immediately know which direction to go.
       </p>
 
       {/* ── Custom inputs ── */}
@@ -132,7 +132,7 @@ const styles = {
   inputRow: { display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' },
   inputLabel: { display: 'block', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--ink-soft)', marginBottom: 6 },
   textInput: { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--input-bg)', color: 'var(--ink)', fontFamily: 'var(--font-mono)', fontSize: 13 },
-  runBtn: { padding: '9px 20px', borderRadius: 8, border: 'none', background: 'var(--marker-blue)', color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap' },
+  runBtn: { padding: '9px 20px', borderRadius: 8, border: 'none', background: 'var(--marker-blue)', color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', cursor: 'pointer' },
   errorText: { margin: '8px 0 0', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--marker-red)' },
   legend: { display: 'flex', gap: 18, marginBottom: 16, flexWrap: 'wrap' },
   legendItem: { display: 'flex', alignItems: 'center', gap: 6 },

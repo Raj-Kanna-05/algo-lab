@@ -25,6 +25,7 @@ export default function BubbleSortPage() {
     setArray(newArr)
     setSteps(bubbleSort(newArr))
     setCurrentStep(0)
+    setIsPlaying(true) // Start animating automatically!
   }
 
   const step = steps[currentStep]
@@ -42,8 +43,7 @@ export default function BubbleSortPage() {
 
       <p style={styles.description}>
         Bubble sort walks through the array comparing neighbors. Whenever a pair is out of order,
-        it swaps them — like a bubble drifting to the top. After each full pass, the largest
-        remaining value has "bubbled" into its correct place at the end.
+        it swaps them — like a bubble drifting to the top.
       </p>
 
       <ArrayInput label="Custom Array" defaultValue={array} onRun={handleCustomArray} />
