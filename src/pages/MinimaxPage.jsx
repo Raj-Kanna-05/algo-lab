@@ -1,12 +1,15 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { minimax, createDefaultBoard } from '../algorithms/games/minimax'
+import { minimaxBestMove } from '../algorithms/games/tictactoe'
 import TicTacToeBoard from '../components/games/TicTacToeBoard'
+import TicTacToeGame from '../components/games/TicTacToeGame'
 import PlaybackControls from '../components/common/PlaybackControls'
 
 export default function MinimaxPage() {
-  const startBoard = useMemo(() => createDefaultBoard(), [])
-  const steps      = useMemo(() => minimax(startBoard), [startBoard])
+  const [mode, setMode]            = useState('learn') // 'learn' | 'play'
+  const startBoard                 = useMemo(() => createDefaultBoard(), [])
+  const steps                      = useMemo(() => minimax(startBoard), [startBoard])
 
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying]     = useState(false)
@@ -32,32 +35,56 @@ export default function MinimaxPage() {
         possible future move and picks the one that leads to the best guaranteed outcome.
       </p>
 
-      <div style={styles.info}>
-        <InfoBadge label="AI plays" value="X (maximiser)" color="var(--marker-blue)" />
-        <InfoBadge label="Opponent" value="O (minimiser)" color="var(--marker-red)" />
-        <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
-        {step.score !== null && (
-          <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
-        )}
+      {/* ── Mode selector ── */}
+      <div className="mode-tabs">
+        <button
+          className={`mode-tab ${mode === 'learn' ? 'active' : ''}`}
+          onClick={() => setMode('learn')}
+          id="minimax-mode-learn"
+        >
+          📖 Learn Mode (Step-by-step)
+        </button>
+        <button
+          className={`mode-tab ${mode === 'play' ? 'active' : ''}`}
+          onClick={() => setMode('play')}
+          id="minimax-mode-play"
+        >
+          🎮 Play Mode (Interactive)
+        </button>
       </div>
 
-      <div style={styles.layout}>
-        <div style={styles.panel}>
-          <TicTacToeBoard step={step} />
+      {mode === 'learn' ? (
+        <>
+          <div style={styles.info}>
+            <InfoBadge label="AI plays" value="X (maximiser)" color="var(--marker-blue)" />
+            <InfoBadge label="Opponent" value="O (minimiser)" color="var(--marker-red)" />
+            <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
+            {step.score !== null && (
+              <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
+            )}
+          </div>
+
+          <div style={styles.panel}>
+            <TicTacToeBoard step={step} />
+          </div>
+
+          <p style={styles.note}>{step.note}</p>
+
+          <PlaybackControls
+            currentStep={currentStep}
+            totalSteps={steps.length}
+            isPlaying={isPlaying}
+            speedMs={speedMs}
+            onStepChange={handleStepChange}
+            onPlayingChange={setIsPlaying}
+            onSpeedChange={setSpeedMs}
+          />
+        </>
+      ) : (
+        <div style={styles.playPanel}>
+          <TicTacToeGame getBestMoveFn={minimaxBestMove} algorithmLabel="Minimax AI" />
         </div>
-      </div>
-
-      <p style={styles.note}>{step.note}</p>
-
-      <PlaybackControls
-        currentStep={currentStep}
-        totalSteps={steps.length}
-        isPlaying={isPlaying}
-        speedMs={speedMs}
-        onStepChange={handleStepChange}
-        onPlayingChange={setIsPlaying}
-        onSpeedChange={setSpeedMs}
-      />
+      )}
     </div>
   )
 }
@@ -80,7 +107,7 @@ const styles = {
   badge: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 2 },
   badgeLabel: { fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-soft)', textTransform: 'uppercase' },
   badgeValue: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 },
-  layout: { display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 16 },
-  panel: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10 },
+  panel: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, marginBottom: 16, display: 'inline-block' },
+  playPanel: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24, display: 'inline-block' },
   note: { fontFamily: 'var(--font-mono)', fontSize: 13.5, color: 'var(--ink)', minHeight: 20, marginBottom: 16 },
 }

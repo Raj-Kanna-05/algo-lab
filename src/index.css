@@ -1,31 +1,50 @@
 :root {
-  /* --- Color tokens: "whiteboard lab" palette --- */
-  --bg: #f4f5f7;
-  --surface: #ffffff;
-  --grid-line: rgba(43, 89, 255, 0.07);
-  --ink: #1b1f27;
-  --ink-soft: #5b6270;
-  --border: #dde1e8;
+  /* ── Dark background palette ── */
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface-2: #21262d;
+  --grid-line: rgba(88, 166, 255, 0.04);
 
-  --marker-blue:  #2b59ff;
-  --marker-amber: #ffb020;
-  --marker-red:   #ff4136;
-  --marker-green: #00b894;
+  /* ── Text ── */
+  --ink:      #e6edf3;
+  --ink-soft: #7d8590;
 
+  /* ── Borders ── */
+  --border: #30363d;
+
+  /* ── Marker / algorithm state colors (brightened for dark bg) ── */
+  --marker-blue:  #58a6ff;
+  --marker-amber: #e3b341;
+  --marker-red:   #f85149;
+  --marker-green: #3fb950;
+
+  /* ── Semi-transparent tints (used for cell highlights) ── */
+  --tint-blue:  rgba(88,  166, 255, 0.18);
+  --tint-amber: rgba(227, 179,  65, 0.18);
+  --tint-red:   rgba(248,  81,  73, 0.18);
+  --tint-green: rgba(63,  185,  80, 0.18);
+
+  /* ── Component-specific tokens ── */
+  --cell-empty:  #1c2128;   /* empty maze / grid cell          */
+  --chess-light: #2d3142;   /* light chessboard square          */
+  --chess-dark:  #1c2030;   /* dark chessboard square           */
+  --input-bg:    #0d1117;   /* text input background            */
+  --table-head:  #21262d;   /* table header background          */
+
+  /* ── Typography ── */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-body:    'Inter',         system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  /* ── Elevation ── */
+  --shadow-sm: 0 1px 4px  rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
 }
 
+/* ─────────────── Reset ─────────────── */
 * { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
-  padding: 0;
-}
+html, body { margin: 0; padding: 0; }
 
 body {
   background-color: var(--bg);
@@ -38,36 +57,96 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
 
-button { font-family: inherit; }
-
+/* ─────────────── Focus ring ─────────────── */
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid var(--marker-blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
+/* ─────────────── Layout ─────────────── */
 .container {
   max-width: 1080px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* Card hover lift — applied to algorithm cards on Home */
-a[style*="card"] {
-  transition: transform 140ms ease, box-shadow 140ms ease;
+/* ─────────────── Form controls ─────────────── */
+input[type="text"],
+input[type="number"],
+select {
+  background: var(--input-bg);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
 }
-a[style*="card"]:hover {
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--marker-blue);
+  box-shadow: 0 0 0 3px rgba(88,166,255,0.15);
+}
+
+input[type="range"] {
+  accent-color: var(--marker-blue);
+}
+
+/* ─────────────── Card hover (Home page) ─────────────── */
+a.algo-card-link {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+  display: block;
+}
+a.algo-card-link:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
-/* Respect reduced-motion preferences */
+/* ─────────────── Mode tabs ─────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 24px;
+}
+
+.mode-tab {
+  padding: 8px 20px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.mode-tab.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─────────────── Scrollbar (webkit) ─────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ─────────────── Reduced-motion ─────────────── */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
@@ -75,7 +154,6 @@ a[style*="card"]:hover {
   }
 }
 
-/* Responsive tweaks */
 @media (max-width: 600px) {
   .container { padding: 0 16px; }
 }

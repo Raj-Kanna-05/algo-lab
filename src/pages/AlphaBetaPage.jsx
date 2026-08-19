@@ -1,12 +1,15 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { alphaBeta, createDefaultBoard } from '../algorithms/games/alphaBeta'
+import { alphaBetaBestMove } from '../algorithms/games/tictactoe'
 import TicTacToeBoard from '../components/games/TicTacToeBoard'
+import TicTacToeGame from '../components/games/TicTacToeGame'
 import PlaybackControls from '../components/common/PlaybackControls'
 
 export default function AlphaBetaPage() {
-  const startBoard = useMemo(() => createDefaultBoard(), [])
-  const steps      = useMemo(() => alphaBeta(startBoard), [startBoard])
+  const [mode, setMode]            = useState('learn') // 'learn' | 'play'
+  const startBoard                 = useMemo(() => createDefaultBoard(), [])
+  const steps                      = useMemo(() => alphaBeta(startBoard), [startBoard])
 
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying]     = useState(false)
@@ -32,30 +35,56 @@ export default function AlphaBetaPage() {
         Beta (β) tracks the best the minimiser is guaranteed. When α ≥ β, we cut off.
       </p>
 
-      <div style={styles.info}>
-        <InfoBadge label="α (best for X)" value={String(step.alpha)} color="var(--marker-blue)" />
-        <InfoBadge label="β (best for O)" value={String(step.beta)} color="var(--marker-red)" />
-        <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
-        {step.score !== null && (
-          <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
-        )}
+      {/* ── Mode selector ── */}
+      <div className="mode-tabs">
+        <button
+          className={`mode-tab ${mode === 'learn' ? 'active' : ''}`}
+          onClick={() => setMode('learn')}
+          id="alphabeta-mode-learn"
+        >
+          📖 Learn Mode (Step-by-step)
+        </button>
+        <button
+          className={`mode-tab ${mode === 'play' ? 'active' : ''}`}
+          onClick={() => setMode('play')}
+          id="alphabeta-mode-play"
+        >
+          🎮 Play Mode (Interactive)
+        </button>
       </div>
 
-      <div style={styles.panel}>
-        <TicTacToeBoard step={step} />
-      </div>
+      {mode === 'learn' ? (
+        <>
+          <div style={styles.info}>
+            <InfoBadge label="α (best for X)" value={String(step.alpha)} color="var(--marker-blue)" />
+            <InfoBadge label="β (best for O)" value={String(step.beta)} color="var(--marker-red)" />
+            <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
+            {step.score !== null && (
+              <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
+            )}
+          </div>
 
-      <p style={styles.note}>{step.note}</p>
+          <div style={styles.panel}>
+            <TicTacToeBoard step={step} />
+          </div>
 
-      <PlaybackControls
-        currentStep={currentStep}
-        totalSteps={steps.length}
-        isPlaying={isPlaying}
-        speedMs={speedMs}
-        onStepChange={handleStepChange}
-        onPlayingChange={setIsPlaying}
-        onSpeedChange={setSpeedMs}
-      />
+          <p style={styles.note}>{step.note}</p>
+
+          <PlaybackControls
+            currentStep={currentStep}
+            totalSteps={steps.length}
+            isPlaying={isPlaying}
+            speedMs={speedMs}
+            onStepChange={handleStepChange}
+            onPlayingChange={setIsPlaying}
+            onSpeedChange={setSpeedMs}
+          />
+        </>
+      ) : (
+        <div style={styles.playPanel}>
+          <TicTacToeGame getBestMoveFn={alphaBetaBestMove} algorithmLabel="Alpha-Beta AI" />
+        </div>
+      )}
     </div>
   )
 }
@@ -79,5 +108,6 @@ const styles = {
   badgeLabel: { fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-soft)', textTransform: 'uppercase' },
   badgeValue: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 },
   panel: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, marginBottom: 16, display: 'inline-block' },
+  playPanel: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24, display: 'inline-block' },
   note: { fontFamily: 'var(--font-mono)', fontSize: 13.5, color: 'var(--ink)', minHeight: 20, marginBottom: 16 },
 }

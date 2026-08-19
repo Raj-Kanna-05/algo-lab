@@ -1,13 +1,10 @@
 /**
- * TicTacToeBoard — shared visual for Minimax and Alpha-Beta pages
- *
- * Renders a Tic-Tac-Toe board (3×3 grid of cells).
- * Highlights the cell currently being evaluated.
+ * TicTacToeBoard — dark mode compatible, uses CSS variable tints
  *
  * step.board     — 9-item array: null | 'X' | 'O'
- * step.highlight — index of cell being focused (amber glow)
+ * step.highlight — index of cell being focused (amber)
  * step.phase     — 'explore' | 'prune' | 'score' | 'choose'
- * step.aiMove    — final chosen move index (green glow)
+ * step.aiMove    — final chosen move index (green)
  */
 
 export default function TicTacToeBoard({ step }) {
@@ -16,23 +13,23 @@ export default function TicTacToeBoard({ step }) {
   return (
     <div style={styles.wrap}>
       {board.map((cell, i) => {
+        let bg          = 'var(--surface-2)'
         let borderColor = 'var(--border)'
-        let bgColor     = 'var(--surface)'
-        let glowColor   = 'none'
+        let glow        = 'none'
 
         if (aiMove === i) {
-          bgColor   = '#e6faf3'
+          bg          = 'var(--tint-green)'
           borderColor = 'var(--marker-green)'
-          glowColor = '0 0 0 3px var(--marker-green)'
+          glow        = '0 0 0 3px rgba(63,185,80,0.35)'
         } else if (highlight === i) {
           if (phase === 'conflict' || phase === 'prune') {
-            bgColor   = '#fff0ee'
+            bg          = 'var(--tint-red)'
             borderColor = 'var(--marker-red)'
-            glowColor = '0 0 0 3px var(--marker-red)'
+            glow        = '0 0 0 3px rgba(248,81,73,0.3)'
           } else {
-            bgColor   = '#fffbee'
+            bg          = 'var(--tint-amber)'
             borderColor = 'var(--marker-amber)'
-            glowColor = '0 0 0 3px var(--marker-amber)'
+            glow        = '0 0 0 3px rgba(227,179,65,0.3)'
           }
         }
 
@@ -41,17 +38,15 @@ export default function TicTacToeBoard({ step }) {
             key={i}
             style={{
               ...styles.cell,
-              backgroundColor: bgColor,
+              backgroundColor: bg,
               borderColor,
-              boxShadow: glowColor,
+              boxShadow: glow,
             }}
           >
-            <span
-              style={{
-                ...styles.mark,
-                color: cell === 'X' ? 'var(--marker-blue)' : 'var(--marker-red)',
-              }}
-            >
+            <span style={{
+              ...styles.mark,
+              color: cell === 'X' ? 'var(--marker-blue)' : 'var(--marker-red)',
+            }}>
               {cell ?? ''}
             </span>
           </div>
@@ -64,8 +59,8 @@ export default function TicTacToeBoard({ step }) {
 const styles = {
   wrap: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 100px)',
-    gridTemplateRows:    'repeat(3, 100px)',
+    gridTemplateColumns: 'repeat(3, 96px)',
+    gridTemplateRows:    'repeat(3, 96px)',
     gap: 8,
     padding: 20,
   },
@@ -75,13 +70,13 @@ const styles = {
     justifyContent: 'center',
     border: '2px solid',
     borderRadius: 12,
-    transition: 'background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
+    transition: 'background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease',
   },
   mark: {
     fontFamily: 'var(--font-display)',
     fontWeight: 700,
-    fontSize: 40,
+    fontSize: 38,
     lineHeight: 1,
-    transition: 'color 150ms ease',
+    transition: 'color 120ms ease',
   },
 }

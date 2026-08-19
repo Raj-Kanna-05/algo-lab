@@ -1,22 +1,31 @@
-import { useMemo, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { mergeSort } from '../algorithms/sorting/mergeSort'
 import BarChart from '../components/sorting/BarChart'
 import PlaybackControls from '../components/common/PlaybackControls'
+import ArrayInput from '../components/common/ArrayInput'
 
-const STARTING_ARRAY = [8, 3, 7, 4, 9, 1, 6, 2, 5]
+const DEFAULT_ARRAY = [8, 3, 7, 4, 9, 1, 6, 2, 5]
 
 export default function MergeSortPage() {
-  const steps = useMemo(() => mergeSort(STARTING_ARRAY), [])
-  const maxValue = Math.max(...STARTING_ARRAY)
-
+  const [array, setArray]             = useState(DEFAULT_ARRAY)
+  const [steps, setSteps]             = useState(() => mergeSort(DEFAULT_ARRAY))
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying]     = useState(false)
   const [speedMs, setSpeedMs]         = useState(600)
 
+  const maxValue = Math.max(...array)
+
   const handleStepChange = useCallback((updater) => {
     setCurrentStep((prev) => (typeof updater === 'function' ? updater(prev) : updater))
   }, [])
+
+  function handleCustomArray(newArr) {
+    setIsPlaying(false)
+    setArray(newArr)
+    setSteps(mergeSort(newArr))
+    setCurrentStep(0)
+  }
 
   const step = steps[currentStep]
 
@@ -33,6 +42,8 @@ export default function MergeSortPage() {
         back together in sorted order. It always runs in O(n log n) time —
         more predictable than quick sort or bubble sort.
       </p>
+
+      <ArrayInput label="Custom Array" defaultValue={array} onRun={handleCustomArray} />
 
       <div style={styles.legend}>
         <LegendItem color="var(--marker-blue)"  label="Untouched" />

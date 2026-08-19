@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
 
-// Controls a step index (0..totalSteps-1) that the parent page owns.
-// This component only handles play/pause timing and button wiring —
-// it doesn't know anything about sorting, mazes, or any specific algorithm.
 export default function PlaybackControls({
   currentStep,
   totalSteps,
@@ -33,7 +30,7 @@ export default function PlaybackControls({
     <div style={styles.wrap}>
       <div style={styles.buttonRow}>
         <button
-          style={styles.iconButton}
+          style={{ ...styles.iconButton, opacity: atStart ? 0.4 : 1 }}
           onClick={() => onStepChange(0)}
           disabled={atStart}
           aria-label="Reset to start"
@@ -41,7 +38,7 @@ export default function PlaybackControls({
           ⏮
         </button>
         <button
-          style={styles.iconButton}
+          style={{ ...styles.iconButton, opacity: atStart ? 0.4 : 1 }}
           onClick={() => onStepChange((s) => Math.max(s - 1, 0))}
           disabled={atStart}
           aria-label="Previous step"
@@ -49,14 +46,14 @@ export default function PlaybackControls({
           ◀
         </button>
         <button
-          style={styles.playButton}
+          style={{ ...styles.playButton, opacity: atEnd ? 0.5 : 1 }}
           onClick={() => onPlayingChange(!isPlaying)}
           disabled={atEnd}
         >
           {isPlaying ? 'Pause' : 'Play'}
         </button>
         <button
-          style={styles.iconButton}
+          style={{ ...styles.iconButton, opacity: atEnd ? 0.4 : 1 }}
           onClick={() => onStepChange((s) => Math.min(s + 1, totalSteps - 1))}
           disabled={atEnd}
           aria-label="Next step"
@@ -103,7 +100,8 @@ const styles = {
     height: 38,
     borderRadius: 8,
     border: '1px solid var(--border)',
-    background: 'var(--surface)',
+    background: 'var(--surface-2)',
+    color: 'var(--ink)',
     cursor: 'pointer',
     fontSize: 14,
   },

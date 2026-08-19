@@ -27,7 +27,7 @@ export default function AlgorithmCard({ algorithm }) {
   }
 
   return (
-    <Link to={algorithm.path} style={{ ...styles.card, ...styles.cardLink }}>
+    <Link to={algorithm.path} className="algo-card-link" style={{ ...styles.card, ...styles.cardLink }}>
       {CardInner}
     </Link>
   )
@@ -54,8 +54,9 @@ const styles = {
     width: 34,
     height: 34,
     borderRadius: 8,
-    background: 'var(--ink)',
-    color: 'var(--surface)',
+    background: 'var(--surface-2)',
+    border: '1px solid var(--border)',
+    color: 'var(--marker-blue)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -77,6 +78,7 @@ const styles = {
     fontFamily: 'var(--font-display)',
     fontSize: 18,
     margin: '0 0 4px 0',
+    color: 'var(--ink)',
   },
   blurb: {
     fontFamily: 'var(--font-body)',

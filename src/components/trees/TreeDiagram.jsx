@@ -1,59 +1,25 @@
 /**
- * TreeDiagram — Binary Search Tree visualizer
+ * TreeDiagram — Binary Search Tree visualizer (Dark mode compatible)
  *
  * Renders a BST as a tree diagram using SVG lines for edges
- * and positioned divs for nodes.
+ * and SVG circles/text for nodes.
  *
  * step.tree — root node of the tree (with .left, .right, .value, .state, .id)
  * Node states: 'normal' | 'active' | 'found' | 'inserted' | 'deleted'
  */
 
 const STATE_STYLES = {
-  normal:   { bg: 'var(--surface)',         border: 'var(--border)',        text: 'var(--ink)' },
-  active:   { bg: '#fffbee',               border: 'var(--marker-amber)',  text: 'var(--ink)' },
-  found:    { bg: '#e6faf3',               border: 'var(--marker-green)',  text: 'var(--ink)' },
-  inserted: { bg: 'var(--marker-green)',    border: 'var(--marker-green)',  text: '#fff'        },
-  deleted:  { bg: '#fff0ee',               border: 'var(--marker-red)',    text: 'var(--ink)' },
+  normal:   { bg: 'var(--surface-2)',       border: 'var(--border)',        text: 'var(--ink)' },
+  active:   { bg: 'var(--tint-amber)',     border: 'var(--marker-amber)',  text: 'var(--ink)' },
+  found:    { bg: 'var(--tint-green)',     border: 'var(--marker-green)',  text: 'var(--ink)' },
+  inserted: { bg: 'var(--marker-green)',  border: 'var(--marker-green)',  text: '#ffffff'     },
+  deleted:  { bg: 'var(--tint-red)',       border: 'var(--marker-red)',    text: 'var(--ink)' },
 }
 
 const NODE_RADIUS = 24
-const H_SPACING_BASE = 180
 const V_SPACING = 70
 
-/**
- * Walks the tree to assign x,y coordinates to every node.
- * Returns a flat list of { node, x, y, parentX, parentY } objects.
- */
 function layoutTree(root) {
-  const positions = []
-  let xCounter = { val: 0 }
-
-  function walk(node, depth, parentX, parentY) {
-    if (!node) return
-
-    walk(node.left,  depth + 1, null, null)
-
-    const x = xCounter.val * (NODE_RADIUS * 2 + 20)
-    const y = depth * V_SPACING
-    xCounter.val++
-
-    positions.push({ node, x, y, parentX, parentY })
-
-    walk(node.right, depth + 1, x, y)
-
-    // Fix: update parentX/Y for children after x is determined
-    // We do a second pass below to set parent coords correctly
-    if (node.left)  positions.find(p => p.node === node.left  && p.parentX === null && p.parentY === null && Object.assign(p, { parentX: x, parentY: y }))
-    if (node.right) positions.find(p => p.node === node.right && p.parentX === null && p.parentY === null && Object.assign(p, { parentX: x, parentY: y }))
-  }
-
-  function walkFixed(node, depth) {
-    if (!node) return
-    walkFixed(node.left,  depth + 1)
-    walkFixed(node.right, depth + 1)
-  }
-
-  // Cleaner approach: collect in-order positions first
   const inOrder = []
   function inorder(node, depth) {
     if (!node) return
@@ -68,7 +34,6 @@ function layoutTree(root) {
     coords[node.id] = { x: idx * (NODE_RADIUS * 2 + 20), y: depth * V_SPACING }
   })
 
-  // Build edge list
   const edges = []
   function buildEdges(node) {
     if (!node) return
