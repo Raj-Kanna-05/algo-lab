@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { bstDemo, DEFAULT_VALUES, DEFAULT_SEARCH } from '../algorithms/trees/bst'
 import TreeDiagram from '../components/trees/TreeDiagram'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 export default function BSTPage() {
   const [insertText, setInsertText]   = useState(DEFAULT_VALUES.join(', '))
@@ -106,6 +108,9 @@ export default function BSTPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="bst" />
+      <CodeTabs algorithmId="bst" />
     </div>
   )
 }

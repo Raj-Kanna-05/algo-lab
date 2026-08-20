@@ -4,6 +4,8 @@ import { aStar } from '../algorithms/pathfinding/aStar'
 import { generateMaze } from '../utils/mazeGenerator'
 import MazeGrid from '../components/pathfinding/MazeGrid'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 function getResponsiveDimensions() {
   if (typeof window !== 'undefined' && window.innerWidth < 600) {
@@ -94,6 +96,9 @@ export default function AStarPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="a-star-maze" />
+      <CodeTabs algorithmId="a-star-maze" />
     </div>
   )
 }

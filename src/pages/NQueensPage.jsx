@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { nQueens } from '../algorithms/backtracking/nQueens'
 import QueensBoard from '../components/backtracking/QueensBoard'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 export default function NQueensPage() {
   const [n, setN]                     = useState(6)
@@ -85,6 +87,9 @@ export default function NQueensPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="n-queens" />
+      <CodeTabs algorithmId="n-queens" />
     </div>
   )
 }

@@ -4,6 +4,8 @@ import { bfs } from '../algorithms/pathfinding/bfs'
 import { generateMaze } from '../utils/mazeGenerator'
 import MazeGrid from '../components/pathfinding/MazeGrid'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 function getResponsiveDimensions() {
   if (typeof window !== 'undefined' && window.innerWidth < 600) {
@@ -93,6 +95,9 @@ export default function BFSPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="bfs-maze" />
+      <CodeTabs algorithmId="bfs-maze" />
     </div>
   )
 }

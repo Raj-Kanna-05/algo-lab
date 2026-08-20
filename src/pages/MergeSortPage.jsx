@@ -4,6 +4,8 @@ import { mergeSort } from '../algorithms/sorting/mergeSort'
 import BarChart from '../components/sorting/BarChart'
 import PlaybackControls from '../components/common/PlaybackControls'
 import ArrayInput from '../components/common/ArrayInput'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 const DEFAULT_ARRAY = [8, 3, 7, 4, 9, 1, 6, 2, 5]
 
@@ -71,6 +73,9 @@ export default function MergeSortPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="merge-sort" />
+      <CodeTabs algorithmId="merge-sort" />
     </div>
   )
 }

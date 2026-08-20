@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { knapsack, DEFAULT_ITEMS, DEFAULT_CAPACITY } from '../algorithms/dp/knapsack'
 import KnapsackTable from '../components/dp/KnapsackTable'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 export default function KnapsackPage() {
   const [items, setItems]             = useState(DEFAULT_ITEMS)
@@ -164,6 +166,9 @@ export default function KnapsackPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="knapsack" />
+      <CodeTabs algorithmId="knapsack" />
     </div>
   )
 }

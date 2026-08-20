@@ -4,6 +4,8 @@ import { bubbleSort } from '../algorithms/sorting/bubbleSort'
 import BarChart from '../components/sorting/BarChart'
 import PlaybackControls from '../components/common/PlaybackControls'
 import ArrayInput from '../components/common/ArrayInput'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 const DEFAULT_ARRAY = [8, 3, 7, 4, 9, 1, 6, 2, 5]
 
@@ -70,6 +72,9 @@ export default function BubbleSortPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="bubble-sort" />
+      <CodeTabs algorithmId="bubble-sort" />
     </div>
   )
 }

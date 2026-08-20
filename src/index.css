@@ -41,6 +41,38 @@
   --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
 }
 
+/* ───────────────── Light Mode ───────────────── */
+html.light {
+  --bg:        #f5f7fa;
+  --surface:   #ffffff;
+  --surface-2: #eef0f3;
+  --grid-line: rgba(0, 0, 0, 0.04);
+
+  --ink:      #1a1f27;
+  --ink-soft: #6b7280;
+
+  --border: #d1d5db;
+
+  --marker-blue:  #1d6fa8;
+  --marker-amber: #b45309;
+  --marker-red:   #dc2626;
+  --marker-green: #16a34a;
+
+  --tint-blue:  rgba(29,  111, 168, 0.12);
+  --tint-amber: rgba(180, 83,   9, 0.12);
+  --tint-red:   rgba(220,  38,  38, 0.12);
+  --tint-green: rgba(22,  163,  74, 0.12);
+
+  --cell-empty:  #f0f2f5;
+  --chess-light: #e8edf2;
+  --chess-dark:  #d8dfe8;
+  --input-bg:    #ffffff;
+  --table-head:  #eef0f3;
+
+  --shadow-sm: 0 1px 4px  rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+}
+
 /* ─────────────── Reset ─────────────── */
 * { box-sizing: border-box; }
 
@@ -146,6 +178,46 @@ a.algo-card-link:hover {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
+/* ─────────────── Theme transition ─────────────── */
+body, html {
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+/* ─────────────── Theme toggle button ─────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+  white-space: nowrap;
+}
+.theme-toggle:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.theme-toggle-icon {
+  font-size: 15px;
+  line-height: 1;
+  transition: transform 300ms ease;
+}
+html.light .theme-toggle-icon {
+  transform: rotate(180deg);
+}
+
 /* ─────────────── Reduced-motion ─────────────── */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -156,4 +228,5 @@ a.algo-card-link:hover {
 
 @media (max-width: 600px) {
   .container { padding: 0 16px; }
+  .theme-toggle { top: 10px; right: 12px; padding: 6px 11px; font-size: 12px; }
 }

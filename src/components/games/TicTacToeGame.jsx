@@ -11,7 +11,7 @@
  *   - When it's AI's turn, it responds after a 350ms delay to feel natural
  *   - AI plays optimally — best you can do is draw
  */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { checkWinner, WIN_LINES } from '../../algorithms/games/tictactoe'
 
 export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) {
@@ -22,6 +22,10 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
   const [winLine, setWinLine]           = useState(null)    // [a,b,c] indices
   const [aiThinking, setAiThinking]     = useState(false)
 
+  // Always keep a ref to the latest board so the AI effect uses fresh state
+  const boardRef = useRef(board)
+  useEffect(() => { boardRef.current = board }, [board])
+
   const aiSymbol     = playerSymbol === 'X' ? 'O' : 'X'
   const isPlayerTurn = currentTurn === playerSymbol && !result
 
@@ -30,9 +34,10 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
     if (currentTurn !== aiSymbol || result) return
 
     setAiThinking(true)
-    const snap = board.slice() // capture board at scheduling time
 
     const timer = setTimeout(() => {
+      // Use the ref so we always get the freshest board, regardless of closure capture
+      const snap = boardRef.current.slice()
       const move = getBestMoveFn(snap, aiSymbol)
       setAiThinking(false)
 
@@ -52,9 +57,9 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
     }, 350)
 
     return () => { clearTimeout(timer); setAiThinking(false) }
-  // board is captured in snap; intentionally omit to avoid re-scheduling
+  // currentTurn and result are the correct deps — boardRef.current is always fresh
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTurn, result])
+  }, [currentTurn, result, aiSymbol])
 
   // ── Player click ────────────────────────────────────────────────────────────
   function handleCellClick(i) {
@@ -77,6 +82,7 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
   function changeRole(sym) {
     setPlayerSymbol(sym)
     setBoard(Array(9).fill(null))
+    boardRef.current = Array(9).fill(null)
     setCurrentTurn('X')
     setResult(null)
     setWinLine(null)
@@ -85,7 +91,9 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
 
   // ── New game ────────────────────────────────────────────────────────────────
   function newGame() {
-    setBoard(Array(9).fill(null))
+    const empty = Array(9).fill(null)
+    setBoard(empty)
+    boardRef.current = empty
     setCurrentTurn('X')
     setResult(null)
     setWinLine(null)
@@ -96,9 +104,9 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
   let statusText  = isPlayerTurn ? 'Your turn' : aiThinking ? `${algorithmLabel} is thinking…` : `${algorithmLabel} is thinking…`
   let statusColor = 'var(--ink-soft)'
   if (result) {
-    if (result === 'draw')          { statusText = "It's a draw!"; statusColor = 'var(--marker-amber)' }
+    if (result === 'draw')            { statusText = "It's a draw!"; statusColor = 'var(--marker-amber)' }
     else if (result === playerSymbol) { statusText = 'You win! 🎉';  statusColor = 'var(--marker-green)' }
-    else                            { statusText = `${algorithmLabel} wins`; statusColor = 'var(--marker-red)' }
+    else                              { statusText = `${algorithmLabel} wins`; statusColor = 'var(--marker-red)' }
   }
 
   return (
@@ -118,7 +126,7 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
           onClick={() => changeRole('O')}
           id="play-as-o"
         >
-          O&nbsp;<small>(second)</small>
+          O&nbsp;<small>(second — AI goes first)</small>
         </button>
       </div>
 
@@ -137,8 +145,6 @@ export default function TicTacToeGame({ getBestMoveFn, algorithmLabel = 'AI' }) 
           if (isWinCell) {
             bg = result === playerSymbol ? 'var(--tint-green)' : 'var(--tint-red)'
             border = result === playerSymbol ? 'var(--marker-green)' : 'var(--marker-red)'
-          } else if (!cell && isPlayerTurn && !result) {
-            // hoverable
           }
 
           return (
@@ -197,6 +203,7 @@ const styles = {
     alignItems: 'center',
     gap: 8,
     marginBottom: 16,
+    flexWrap: 'wrap',
   },
   roleLabel: {
     fontFamily: 'var(--font-mono)',

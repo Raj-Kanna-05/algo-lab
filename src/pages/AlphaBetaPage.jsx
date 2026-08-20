@@ -1,15 +1,16 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { alphaBeta, createDefaultBoard } from '../algorithms/games/alphaBeta'
+import { alphaBetaFullGame } from '../algorithms/games/alphaBeta'
 import { alphaBetaBestMove } from '../algorithms/games/tictactoe'
 import TicTacToeBoard from '../components/games/TicTacToeBoard'
 import TicTacToeGame from '../components/games/TicTacToeGame'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 export default function AlphaBetaPage() {
   const [mode, setMode]            = useState('learn') // 'learn' | 'play'
-  const startBoard                 = useMemo(() => createDefaultBoard(), [])
-  const steps                      = useMemo(() => alphaBeta(startBoard), [startBoard])
+  const steps                      = useMemo(() => alphaBetaFullGame(), [])
 
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying]     = useState(false)
@@ -21,6 +22,10 @@ export default function AlphaBetaPage() {
 
   const step = steps[currentStep]
 
+  // Per-step player colour
+  const playerColor = step.player === 'X' ? 'var(--marker-blue)' : 'var(--marker-red)'
+  const roleLabel   = step.player === 'X' ? 'Maximiser ↑' : 'Minimiser ↓'
+
   return (
     <div className="container" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <Link to="/" style={styles.backLink}>← All algorithms</Link>
@@ -30,9 +35,9 @@ export default function AlphaBetaPage() {
 
       <p style={styles.description}>
         Alpha-Beta is Minimax with a powerful optimisation: if we already know
-        a branch can't possibly be better than our current best, we <strong>prune</strong> it —
-        skip it entirely. Alpha (α) tracks the best score the maximiser is guaranteed;
-        Beta (β) tracks the best the minimiser is guaranteed. When α ≥ β, we cut off.
+        a branch can't possibly be better than our current best, we <strong>prune</strong> it.
+        In <strong>Learn Mode</strong>, both X and O play a full game — each using Alpha-Beta
+        to pick every move. Watch α and β update as branches get cut.
       </p>
 
       {/* ── Mode selector ── */}
@@ -42,24 +47,26 @@ export default function AlphaBetaPage() {
           onClick={() => setMode('learn')}
           id="alphabeta-mode-learn"
         >
-          📖 Learn Mode (Step-by-step)
+          📖 Learn Mode (Agent vs Agent)
         </button>
         <button
           className={`mode-tab ${mode === 'play' ? 'active' : ''}`}
           onClick={() => setMode('play')}
           id="alphabeta-mode-play"
         >
-          🎮 Play Mode (Interactive)
+          🎮 Play Mode (You vs AI)
         </button>
       </div>
 
       {mode === 'learn' ? (
         <>
           <div style={styles.info}>
-            <InfoBadge label="α (best for X)" value={String(step.alpha)} color="var(--marker-blue)" />
-            <InfoBadge label="β (best for O)" value={String(step.beta)} color="var(--marker-red)" />
-            <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
-            {step.score !== null && (
+            <InfoBadge label="Current player" value={step.player ?? '—'}      color={playerColor} />
+            <InfoBadge label="Role"           value={roleLabel}                color={playerColor} />
+            <InfoBadge label="α (best for X)" value={String(step.alpha ?? '-∞')} color="var(--marker-blue)" />
+            <InfoBadge label="β (best for O)" value={String(step.beta  ?? '+∞')} color="var(--marker-red)" />
+            <InfoBadge label="Phase"          value={step.phase}               color="var(--marker-amber)" />
+            {step.score !== null && step.score !== undefined && (
               <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
             )}
           </div>
@@ -85,6 +92,9 @@ export default function AlphaBetaPage() {
           <TicTacToeGame getBestMoveFn={alphaBetaBestMove} algorithmLabel="Alpha-Beta AI" />
         </div>
       )}
+
+      <PseudocodePanel algorithmId="alpha-beta" />
+      <CodeTabs algorithmId="alpha-beta" />
     </div>
   )
 }

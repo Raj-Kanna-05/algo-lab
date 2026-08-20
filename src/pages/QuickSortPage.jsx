@@ -4,6 +4,8 @@ import { quickSort } from '../algorithms/sorting/quickSort'
 import BarChart from '../components/sorting/BarChart'
 import PlaybackControls from '../components/common/PlaybackControls'
 import ArrayInput from '../components/common/ArrayInput'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 const DEFAULT_ARRAY = [8, 3, 7, 4, 9, 1, 6, 2, 5]
 
@@ -71,6 +73,9 @@ export default function QuickSortPage() {
         onPlayingChange={setIsPlaying}
         onSpeedChange={setSpeedMs}
       />
+
+      <PseudocodePanel algorithmId="quick-sort" />
+      <CodeTabs algorithmId="quick-sort" />
     </div>
   )
 }

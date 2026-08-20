@@ -1,15 +1,16 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { minimax, createDefaultBoard } from '../algorithms/games/minimax'
+import { minimaxFullGame } from '../algorithms/games/minimax'
 import { minimaxBestMove } from '../algorithms/games/tictactoe'
 import TicTacToeBoard from '../components/games/TicTacToeBoard'
 import TicTacToeGame from '../components/games/TicTacToeGame'
 import PlaybackControls from '../components/common/PlaybackControls'
+import PseudocodePanel from '../components/common/PseudocodePanel'
+import CodeTabs from '../components/common/CodeTabs'
 
 export default function MinimaxPage() {
   const [mode, setMode]            = useState('learn') // 'learn' | 'play'
-  const startBoard                 = useMemo(() => createDefaultBoard(), [])
-  const steps                      = useMemo(() => minimax(startBoard), [startBoard])
+  const steps                      = useMemo(() => minimaxFullGame(), [])
 
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying]     = useState(false)
@@ -21,6 +22,10 @@ export default function MinimaxPage() {
 
   const step = steps[currentStep]
 
+  // Per-step player colour
+  const playerColor = step.player === 'X' ? 'var(--marker-blue)' : 'var(--marker-red)'
+  const roleLabel   = step.player === 'X' ? 'Maximiser ↑' : 'Minimiser ↓'
+
   return (
     <div className="container" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <Link to="/" style={styles.backLink}>← All algorithms</Link>
@@ -30,9 +35,9 @@ export default function MinimaxPage() {
 
       <p style={styles.description}>
         Minimax is how a computer plays perfect two-player games like Tic-Tac-Toe.
-        The AI (X) tries to <strong>maximise</strong> its score; the opponent (O)
-        tries to <strong>minimise</strong> it. The algorithm looks ahead at every
-        possible future move and picks the one that leads to the best guaranteed outcome.
+        In <strong>Learn Mode</strong>, watch <strong>both agents</strong> play a complete
+        game — X (maximiser) and O (minimiser) each use Minimax to pick every move.
+        The algorithm looks ahead at all future states and picks the guaranteed best outcome.
       </p>
 
       {/* ── Mode selector ── */}
@@ -42,24 +47,24 @@ export default function MinimaxPage() {
           onClick={() => setMode('learn')}
           id="minimax-mode-learn"
         >
-          📖 Learn Mode (Step-by-step)
+          📖 Learn Mode (Agent vs Agent)
         </button>
         <button
           className={`mode-tab ${mode === 'play' ? 'active' : ''}`}
           onClick={() => setMode('play')}
           id="minimax-mode-play"
         >
-          🎮 Play Mode (Interactive)
+          🎮 Play Mode (You vs AI)
         </button>
       </div>
 
       {mode === 'learn' ? (
         <>
           <div style={styles.info}>
-            <InfoBadge label="AI plays" value="X (maximiser)" color="var(--marker-blue)" />
-            <InfoBadge label="Opponent" value="O (minimiser)" color="var(--marker-red)" />
-            <InfoBadge label="Phase" value={step.phase} color="var(--marker-amber)" />
-            {step.score !== null && (
+            <InfoBadge label="Current player" value={step.player ?? '—'} color={playerColor} />
+            <InfoBadge label="Role"           value={roleLabel}           color={playerColor} />
+            <InfoBadge label="Phase"          value={step.phase}          color="var(--marker-amber)" />
+            {step.score !== null && step.score !== undefined && (
               <InfoBadge label="Score" value={String(step.score)} color="var(--marker-green)" />
             )}
           </div>
@@ -85,6 +90,9 @@ export default function MinimaxPage() {
           <TicTacToeGame getBestMoveFn={minimaxBestMove} algorithmLabel="Minimax AI" />
         </div>
       )}
+
+      <PseudocodePanel algorithmId="minimax" />
+      <CodeTabs algorithmId="minimax" />
     </div>
   )
 }
